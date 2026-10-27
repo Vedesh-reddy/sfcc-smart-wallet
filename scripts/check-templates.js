@@ -25,6 +25,6 @@ function inspect(directory) {
 }
 
 inspect(path.resolve(__dirname, '../cartridges'));
-if (total !== 22) throw new Error('Expected to inspect all 22 ISML templates; checked ' + total);
+if (total !== 25) throw new Error('Expected to inspect all 25 ISML templates; checked ' + total);
 console.log('ISML templates checked: ' + total + '; issues: ' + issues);
 process.exitCode = issues ? 1 : 0;
