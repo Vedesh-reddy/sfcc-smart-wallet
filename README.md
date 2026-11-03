@@ -139,14 +139,20 @@ On a wallet's page, customer service can adjust the balance, refund, transfer or
 
 The full procedure is in [DEPLOYMENT.md](docs/DEPLOYMENT.md).
 
+## Background job
+
+All background work runs in one Business Manager job, `Wallet-Job`, with its steps in order. Steps that run less often than the job keep their own timing with `RunEveryMinutes` or `RunAtHourUTC`, and finish `NOT_DUE` when skipped. A failing step doesn't stop the next one, and the last step, `ReportFailures`, then marks the job `ERROR`.
+
+Upgrading from a version with several jobs? Import `metadata/retired-jobs/jobs.xml` once to delete the old ones.
+
 ## Production blockers
 
 These must be resolved and signed off before real money is accepted. They are explained in [SECURITY.md](docs/SECURITY.md#production-blockers). All of them are open.
 
 1. **Regulatory classification**: a closed-loop stored-value program can fall under state money-transmitter, prepaid-access (FinCEN) and gift-card/escheatment rules. Legal must classify the program per state and approve the terms of use, before `walletLiveMoneyApproved` is set.
 2. **Licensed payment gateway**: integrate a provider through the `app.plugin.wallet.gateway` hook (see [API_REFERENCE.md](docs/API_REFERENCE.md#gateway-hook)). The sandbox gateway refuses to run on a production instance.
-3. **Funds safeguarding and accounting**: finance must decide how customer balances are held (deferred revenue, segregated account) and reconcile the `Wallet-Reconcile` output with the provider and the general ledger.
+3. **Funds safeguarding and accounting**: finance must decide how customer balances are held (deferred revenue, segregated account) and reconcile the `Reconcile` step of `Wallet-Job` output with the provider and the general ledger.
 4. **Refund and unclaimed-property policy**: cash-out on request, refunds of unused balances and escheatment of dormant balances must be defined. `walletFundsExpiryDays` stays 0 (no expiry) until then.
 5. **Shipping benefit**: the "free shipping when the wallet pays" program is a merchant promotion. Its terms need approval, and the customer-group rule must be verified (spike W4).
-6. **Sandbox verification**: W1–W4, W6–W8 and W10 passed on `zyeu-002` on 2026-10-27. All seven jobs ran OK, and `Wallet-Reconcile` checked 21 journals and 8 holds with 0 mismatches. W5 and W9 remain open; see [TESTING.md](docs/TESTING.md#sandbox-verification-plan).
+6. **Sandbox verification**: W1–W4, W6–W8 and W10 passed on `zyeu-002` on 2026-10-27. All seven tasks ran OK, then as separate jobs, and the reconciliation checked 21 journals and 8 holds with 0 mismatches. W5 and W9 remain open; see [TESTING.md](docs/TESTING.md#sandbox-verification-plan).
 7. **Headless checkout**: the wallet payment works in SFRA checkout only. A SCAPI/PWA checkout needs its own integration (see [ARCHITECTURE.md](docs/ARCHITECTURE.md#limitations)).
