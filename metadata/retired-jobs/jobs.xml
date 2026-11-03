@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jobs xmlns="http://www.demandware.com/xml/impex/jobs/2015-07-01">
+    <job job-id="Wallet-Holds" mode="delete">
+        <triggers/>
+    </job>
+    <job job-id="Wallet-TopUps" mode="delete">
+        <triggers/>
+    </job>
+    <job job-id="Wallet-Reconcile" mode="delete">
+        <triggers/>
+    </job>
+    <job job-id="Wallet-Risk" mode="delete">
+        <triggers/>
+    </job>
+    <job job-id="Wallet-Expiry" mode="delete">
+        <triggers/>
+    </job>
+    <job job-id="Wallet-Notifications" mode="delete">
+        <triggers/>
+    </job>
+    <job job-id="Wallet-Cleanup" mode="delete">
+        <triggers/>
+    </job>
+</jobs>
